@@ -41,6 +41,10 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <stdbool.h>
 #include "wait.h"
 
+#ifdef CAPTURE_ENABLE
+#include "capture.h"
+#endif
+
 /*
  * IBM PC keyboard protocol
  *
@@ -222,23 +226,44 @@ class IBMPC
 
     void int_init(void)
     {
+#ifdef CAPTURE_ENABLE
+        capture_init();
+
+        // INT0-1: Interrupt at any edge
+        DDRD  |= (1 << 6);
+        PORTD |= (1 << 6);    // disable app_isr
+        EIMSK = 0;
+        EICRA = 0x05;
+        EICRB = 0x00;
+        EIFR  = 0xFF;       // clear interrupt flags
+        EIMSK = 0x03;
+#else
         // interrupt at falling edge
         if (clock_bit < 4) {
             EICRA |= (0x2 << ((clock_bit&0x3)*2));
         } else {
             EICRB |= (0x2 << ((clock_bit&0x3)*2));
         }
+#endif
     }
 
     void int_on(void)
     {
+#ifdef CAPTURE_ENABLE
+        PORTD &= ~(1 << 6); // enable app_isr
+#else
         EIFR  |= clock_mask;
         EIMSK |= clock_mask;
+#endif
     }
 
     inline void int_off(void) __attribute__((__always_inline__)) // needed for ISR optimization
     {
+#ifdef CAPTURE_ENABLE
+        PORTD |= (1 << 6);  // disable app_isr
+#else
         EIMSK &= ~clock_mask;
+#endif
     }
 
     /*
