@@ -3,7 +3,7 @@ MCU = atmega32u4
 
 SRC ?=	protocol/ibmpc.cpp \
 	ibmpc_usb.cpp \
-	capture.c
+	common/avr/capture.c
 
 # capture.h should be included in every compile unit when defining 'fixed register'
 #CONFIG_H ?= capture.h

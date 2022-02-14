@@ -29,6 +29,7 @@ void capture_init(void);
 void print_capture(void);
 void print_capture_all(void);
 
+#if defined(__AVR__)
 // pin to be captured
 #define CAPTURE_PIN         PIND
 
@@ -77,6 +78,9 @@ static inline void capture(void) {
           [xtra] "X" (tovf)
     );
 }
+#else
+#   error "This microcontroller doesn't support, currently only for AVR"
+#endif
 
 #ifdef __cplusplus
 }
