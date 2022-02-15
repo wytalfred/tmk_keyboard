@@ -66,7 +66,7 @@ with VCDWriter(sys.stdout, timescale='1 us', date=datetime.utcnow().ctime()) as 
                 prv_stat = stat
 
                 # time: 1/16 us(62.5 ns) per tick(@16MHz+Prescaler:1)
-                writer.change(port, ((ext_time * 0x1000000) + time)/16, stat)
+                writer.change(port, ((ext_time * 0x1000000) + time + 8)/16, stat)
             else:
                 print('Invalid record: ', record, file=sys.stderr);
                 #sys.exit(1)
