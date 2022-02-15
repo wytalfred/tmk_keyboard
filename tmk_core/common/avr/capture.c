@@ -68,9 +68,9 @@ ISR(TIMER1_OVF_vect, ISR_NAKED)
         "push   r0"                 "\n\t"
         "in     r0, __SREG__"       "\n\t"
         "push   r0"                 "\n\t"
-        "lds    r0, %[xtra]"        "\n\t"
+        "lds    r0, %[tov]"        "\n\t"
         "inc    r0"                 "\n\t"
-        "sts    %[xtra], r0"        "\n\t"
+        "sts    %[tov], r0"        "\n\t"
 #ifdef CAPTURE_TIMER_ROLLOVER_RECORD
         "brne   tovf_end"           "\n\t"
 #else
@@ -79,7 +79,7 @@ ISR(TIMER1_OVF_vect, ISR_NAKED)
         "pop    r0"                 "\n\t"
         "reti"                      "\n\t"
 #endif
-        : [xtra] "+X" (tovf)
+        : [tov] "+X" (tovf)
         :
     );
 
