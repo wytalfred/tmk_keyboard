@@ -298,23 +298,19 @@ void process_action(keyrecord_t *record)
                 default:
                     /* tap key */
                     if (event.pressed) {
+                        dprint("KEYMAP_TAP_KEY: No tap: On on press\n");
+                        layer_on(action.layer_tap.val);
+                    } else {
                         if (tap_count > 0) {
-                            dprint("KEYMAP_TAP_KEY: Tap: register_code\n");
+                            dprint("KEYMAP_TAP_KEY: Tap: type_code\n");
+                            layer_off(action.layer_tap.val);
                             register_code(action.layer_tap.code);
-
                             // Delay for MacOS #659
                             if (action.layer_tap.code == KC_CAPSLOCK ||
                                     action.layer_tap.code == KC_NUMLOCK ||
                                     action.layer_tap.code == KC_SCROLLLOCK) {
                                 wait_ms(100);
                             }
-                        } else {
-                            dprint("KEYMAP_TAP_KEY: No tap: On on press\n");
-                            layer_on(action.layer_tap.val);
-                        }
-                    } else {
-                        if (tap_count > 0) {
-                            dprint("KEYMAP_TAP_KEY: Tap: unregister_code\n");
                             unregister_code(action.layer_tap.code);
                         } else {
                             dprint("KEYMAP_TAP_KEY: No tap: Off on release\n");
@@ -322,6 +318,32 @@ void process_action(keyrecord_t *record)
                         }
                     }
                     break;
+                    // // original
+                    // if (event.pressed) {
+                    //     if (tap_count > 0) {
+                    //         dprint("KEYMAP_TAP_KEY: Tap: register_code\n");
+                    //         register_code(action.layer_tap.code);
+
+                    //         // Delay for MacOS #659
+                    //         if (action.layer_tap.code == KC_CAPSLOCK ||
+                    //                 action.layer_tap.code == KC_NUMLOCK ||
+                    //                 action.layer_tap.code == KC_SCROLLLOCK) {
+                    //             wait_ms(100);
+                    //         }
+                    //     } else {
+                    //         dprint("KEYMAP_TAP_KEY: No tap: On on press\n");
+                    //         layer_on(action.layer_tap.val);
+                    //     }
+                    // } else {
+                    //     if (tap_count > 0) {
+                    //         dprint("KEYMAP_TAP_KEY: Tap: unregister_code\n");
+                    //         unregister_code(action.layer_tap.code);
+                    //     } else {
+                    //         dprint("KEYMAP_TAP_KEY: No tap: Off on release\n");
+                    //         layer_off(action.layer_tap.val);
+                    //     }
+                    // }
+                    // break;
             }
             break;
     #endif
